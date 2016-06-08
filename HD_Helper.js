@@ -34,10 +34,12 @@ for (index in liTags){
 console.log(cycledPages);
 $(window).scroll(function() {
 	if($(window).scrollTop() + $(window).height() == $(document).height()) {
-		if (cycledPages != numberOfPages){
-			cycledPages += 1;
-			retrieveNextPage(cycledPages);
+		if (document.getElementsByClassName("link active")[0].innerText == "IP List\n"){
+			if (cycledPages != numberOfPages){
+				cycledPages += 1;
+				retrieveNextPage(cycledPages);
 
+			}
 		}
 	}
 });
