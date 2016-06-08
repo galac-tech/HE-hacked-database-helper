@@ -10,8 +10,7 @@ function retrieveNextPage(page) {
 			var xmlResponse = xmlhttp.responseText;
 			HTML = HTMLParser(xmlResponse);
 			var list = HTML.getElementsByTagName("ul")[3].innerHTML;
-			//console.log(list);
-			document.getElementById("list").innerHTML = document.getElementById("list").innerHTML + "\n" + "<hr><br><center><h1>Page " + page + "</h1><a href='https://legacy.hackerexperience.com/profile?id=494249'><small>Brought to you by MacHacker<small></a></center><br><hr>" + "\n" + list;
+			document.getElementById("list").innerHTML = document.getElementById("list").innerHTML + "\n" + "<hr><br><center><h1>Page " + page + "</h1><small>Brought to you by <a href='https://legacy.hackerexperience.com/profile?id=494249'>MacHacker</a><small></center><br><hr>" + "\n" + list;
 		};
 	};
 
