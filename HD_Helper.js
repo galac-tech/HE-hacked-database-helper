@@ -23,9 +23,15 @@ function retrieveNextPage(page) {
 }
 
 footer = document.getElementsByClassName("pagination alternate")[0];
-F_liTags = footer.getElementsByTagName("li");
-numberOfPages = F_liTags[F_liTags.length - 2].innerText;
-cycledPages = 1;
+liTags = footer.getElementsByTagName("li");
+numberOfPages = parseInt(liTags[liTags.length - 2].innerText);
+for (index in liTags){
+	if (liTags[index].className == "active"){
+		cycledPages = parseInt(liTags[index].innerText);
+		break;
+	}
+}
+console.log(cycledPages);
 $(window).scroll(function() {
 	if($(window).scrollTop() + $(window).height() == $(document).height()) {
 		if (cycledPages != numberOfPages){
