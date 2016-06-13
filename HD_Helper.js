@@ -155,6 +155,8 @@ function searchIPdat() {
         speed = "1 Gbit/s";
     } else if (speed == "all") {
         document.getElementById("list").innerHTML = savedDat.innerHTML;
+        checkFavorites();
+        $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function(){});
         return;
     } else {
         speed = speed + " Mbit/s";
