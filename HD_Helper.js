@@ -3,6 +3,10 @@ var footer = document.getElementsByClassName("pagination alternate")[0];
 var liTags = footer.getElementsByTagName("li");
 var numberOfPages = parseInt(liTags[liTags.length - 2].innerText);
 
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+};
+
 function ifIn(obj, arr) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i] === obj) {
@@ -80,6 +84,8 @@ function loadAll() {
             '</form>';
         document.getElementById("searchIPdat").addEventListener("click", searchIPdat);
         savedDat = document.getElementById("list").cloneNode(true);
+        checkFavorites();
+        $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
     }, (numberOfPages * 0.08) * 1000);
 }
 
@@ -110,7 +116,9 @@ function retrieveNextPage(page) {
             var xmlResponse = xmlhttp.responseText;
             HTML = HTMLParser(xmlResponse);
             var list = HTML.getElementsByTagName("ul")[3].innerHTML;
-            document.getElementById("list").innerHTML = document.getElementById("list").innerHTML + "\n" + "<hr><br><center><h1>Page " + page + "</h1><small>Brought to you by <a href='https://legacy.hackerexperience.com/profile?id=494249'>MacHacker</a><small></center><br><hr>" + "\n" + list;
+            document.getElementById("list").innerHTML = document.getElementById("list").innerHTML + "\n" + "<hr><br><center><h1>Page " + page + "</h1><small>Brought to you by <a href='https://legacy.hackerexperience.com/profile?id=494249'>MacHacker</a></small></center><br><hr>" + "\n" + list;
+            checkFavorites();
+            $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
         }
     };
 
@@ -154,27 +162,20 @@ function searchIPdat() {
     lis = savedDat.children;
     var group = [];
     for (var i in lis) {
-        if (lis[i].tagName == "CENTER") {
-            var page = "<center>" + lis[i].innerHTML + "</center>";
-            var found = true;
-        } else {
-            try {
-                foundSpeed = lis[i].children[2].children[0].children[0].innerText;
-                if (foundSpeed == speed) {
-                    if (ifIn('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>", group) === false) {
-                        if (found === true) {
-                            group.push(page);
-                            found = false;
-                        }
-                        group.push('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>");
-                    }
+        try {
+            foundSpeed = lis[i].children[2].children[0].children[0].innerText;
+            if (foundSpeed == speed) {
+                if (ifIn('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>", group) === false) {
+                    group.push('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>");
                 }
-            } catch (err) {
-                continue;
             }
+        } catch (err) {
+            continue;
         }
     }
     document.getElementById("list").innerHTML = group.join("\n");
+    checkFavorites();
+    $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
 }
 
 if (document.getElementsByClassName("link active")[0].innerText == "IP List\n") {
@@ -209,3 +210,62 @@ $(document).ready(function() {
 });
 
 document.getElementById("loadAll").addEventListener("click", loadAll);
+
+var injectStyle = function(css) {
+    var head = document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+    if (!head) return;
+    style.type = 'text/css';
+    style.textContent = css;
+    head.appendChild(style);
+};
+
+function toggleFavorite(ip, elem) {
+    var favorites = JSON.parse(localStorage.getItem("favorites"));
+    if (favorites[ip]) {
+        delete favorites[ip];
+        elem.removeClass("fa-star");
+        elem.addClass("fa-star-o");
+    } else {
+        favorites[ip] = true;
+        elem.removeClass("fa-star-o");
+        elem.addClass("fa-star");
+    }
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+if (window.location.href.indexOf("legacy.hackerexperience.com/list") != -1) {
+    injectStyle('.fa-star {content: "\f005";}');
+    injectStyle('.fa-star-o {content: "\f006";}');
+    injectStyle('i.favorite {color: #DAA520;}');
+    var favText = localStorage.getItem("favorites"),
+        favorites = {};
+    if (!favText) {
+        localStorage.setItem("favorites", "{}");
+    }
+
+    function checkFavorites() {
+        $("ul.list.ip li").each(function() {
+            var entry = $(this);
+            var ip = entry.find(".list-ip #ip").text();
+            console.log($("#stared", this).length);
+            if ($("#stared", this).length !== 0) {
+                $("#stared", this).remove();
+            } else {
+                var pass = $(this).find(".list-user span.small").get(1).firstChild.data;
+                var url = $(this).find(".list-ip a").attr("href") + "&action=login&user=root&pass=" + pass;
+                $(this).find(".list-user").prepend('<a href="' + url + '" style="float:left;margin: 2px 5px 0px 5px;"><span class="he16-login icon-tab" title="Login" style="margin:0px;"></span><span class="small">login</span></a>');
+            }
+            favorites = JSON.parse(localStorage.getItem("favorites"));
+            if (favorites[ip]) {
+                entry.find(".list-actions").append('<i class="favorite fa-2x fa fa-inverse fa-star" id="stared"></i>');
+            } else {
+                entry.find(".list-actions").append('<i class="favorite fa-2x fa fa-inverse fa-star-o" id="stared"></i>');
+            }
+            entry.find("i.favorite").click(function() {
+                toggleFavorite(ip, $(this));
+            });
+        });
+    }
+    checkFavorites();
+}
