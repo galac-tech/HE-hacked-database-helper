@@ -1,4 +1,6 @@
-//just a test comment!
+//##
+//##
+//##
 var IP_pages = [document.getElementById("list").innerHTML];
 var footer = document.getElementsByClassName("pagination alternate")[0];
 var liTags = footer.getElementsByTagName("li");
