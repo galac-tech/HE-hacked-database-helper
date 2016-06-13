@@ -1,3 +1,9 @@
-.fa-star {content: "\f005";}
-.fa-star-o {content: "\f006";}
-i.favorite {color: #DAA520;}
+.fa-star {
+  content: "\f005";
+}
+.fa-star-o {
+  content: "\f006";
+}
+i.favorite {
+  color: #DAA520;
+}
