@@ -68,14 +68,15 @@ function loadAll() {
             'Sort by : <select id="sortType" style="margin-right: 10px;">' +
             '<option class="form" value="all">View all</option>' +
             '<option class="form" value="internetSpeeds">Internet Speeds</option>' +
-            '<option class="form" disabled>More comming soon!</option>' +
+            '<option class="form" disabled>More coming soon!</option>' +
             '</select>' +
             '</div>' +
             '</form>';
+        document.getElementById("searchIPdat").addEventListener("click", searchIPdat);
         savedDat = document.getElementById("list").cloneNode(true);
         $('#sortType').change(function() {
             var value = $(this).val();
-            if (value == "internetSpeeds") {
+            if (value == "internetSpeeds"){
                 var div = document.getElementById("hidden-div");
                 var form = document.createElement("FORM");
                 form.className = "form-horizontal";
@@ -95,16 +96,16 @@ function loadAll() {
                     '<option class="form" value="other">Other</option>' +
                     '</select>' +
                     '</div>';
-                div.appendChild(form);
-                $('#internetSpeed').change(function() {
-                    searchIPdat();
-                });
-
-            } else if (value == "all") {
-                document.getElementById("internetSpeed-div").remove();
-                document.getElementById("list").innerHTML = savedDat.innerHTML;
-            }
+        div.appendChild(form);
+        $('#internetSpeed').change(function() {
+            searchIPdat()
         });
+        
+    }else if (value == "all"){
+        document.getElementById("internetSpeed-div").remove();
+        document.getElementById("list").innerHTML = savedDat.innerHTML;    
+    }
+});
         checkFavorites();
         $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
     }, (numberOfPages * 0.08) * 1000);
@@ -172,49 +173,49 @@ $(window).scroll(function() {
 
 function searchIPdat() {
     var speed = document.getElementById("internetSpeed").value;
-    if (speed == "selectOne") {
-        return;
+    if (speed == "selectOne"){
+        return
     } else if (speed == "1000") {
         speed = "1 Gbit/s";
     } else if (speed == "other") {
-        var normalSpeeds = ["1 Mbit/s", "2 Mbit/s", "4 Mbit/s", "10 Mbit/s", "25 Mbit/s", "50 Mbit/s", "100 Mbit/s", "250 Mbit/s", "500 Mbit/s", "1 Gbit/s"];
+        var normalSpeeds = ["1 Mbit/s", "2 Mbit/s", "4 Mbit/s", "10 Mbit/s", "25 Mbit/s", "50 Mbit/s", "100 Mbit/", "250 Mbit/s", "500 Mbit/s", "1 Gbit/s"]
         lis = savedDat.children;
         var group = [];
         for (var i in lis) {
-            try {
-                foundSpeed = lis[i].children[2].children[0].children[0].innerText;
-                if (ifIn(foundSpeed, normalSpeeds) === false) {
-                    if (ifIn('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>", group) === false) {
-                        group.push('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>");
+                try {
+                    foundSpeed = lis[i].children[2].children[0].children[0].innerText;
+                    if (ifIn(foundSpeed, normalSpeeds) === false) {
+                        if (ifIn('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>", group) === false) {
+                            group.push('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>");
+                        }
                     }
+                } catch (err) {
+                    continue;
                 }
-            } catch (err) {
-                continue;
-            }
         }
         document.getElementById("list").innerHTML = group.join("\n");
         checkFavorites();
         $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
-        return;
+        return
     } else {
         speed = speed + " Mbit/s";
     }
     lis = savedDat.children;
     var group = [];
     for (var i in lis) {
-        try {
-            var foundSpeed = lis[i].children[2].children[0].children[0].innerText;
-
-            if (foundSpeed == speed) {
-
-                if (ifIn('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>", group) === false) {
-
-                    group.push('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>");
+            try {
+                var foundSpeed = lis[i].children[2].children[0].children[0].innerText;
+                
+                if (foundSpeed == speed) {
+                    
+                    if (ifIn('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>", group) === false) {
+                        
+                        group.push('<li id="' + lis[i].id + '" >' + lis[i].innerHTML + "</li>");
+                    }
                 }
+            } catch (err) {
+                continue;
             }
-        } catch (err) {
-            continue;
-        }
     }
     document.getElementById("list").innerHTML = group.join("\n");
     checkFavorites();
@@ -237,13 +238,13 @@ $(document).ready(function() {
         setTimeout(function() {
             if (isEven(times) === false) {
                 $("#animatedElm").animate({
-                    marginTop: '+=3px'
+                    marginTop: '+=50px'
                 }, 500);
                 $("#hidden-div").show(500);
                 document.getElementById("hidden-div").style.display = "block";
             } else {
                 $("#animatedElm").animate({
-                    marginTop: '-=3px'
+                    marginTop: '-=50px'
                 }, 500);
                 $("#hidden-div").hide(500);
                 document.getElementById("hidden-div").style.display = "none";
