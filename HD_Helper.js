@@ -72,7 +72,6 @@ function loadAll() {
             '</select>' +
             '</div>' +
             '</form>';
-        document.getElementById("searchIPdat").addEventListener("click", searchIPdat);
         savedDat = document.getElementById("list").cloneNode(true);
         $('#sortType').change(function() {
             var value = $(this).val();
