@@ -221,8 +221,10 @@ function searchIPdat() {
     $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
 }
 
-injectTab();
-injectSettingsDiv();
+if (document.getElementsByClassName("link active")[0].innerText == "IP List") {
+    injectTab();
+    injectSettingsDiv();
+}
 
 function isEven(n) {
     return n % 2 === 0;
