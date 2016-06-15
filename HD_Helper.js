@@ -221,7 +221,7 @@ function searchIPdat() {
     $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
 }
 
-if (document.getElementsByClassName("link active")[0].innerText == "IP List") {
++if (document.getElementsByClassName("link active")[0].innerText == "IP List" || document.getElementsByClassName("link active")[0].innerText == "IP List\n") {
     injectTab();
     injectSettingsDiv();
 }
