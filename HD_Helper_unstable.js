@@ -2,6 +2,9 @@ var IP_pages = [document.getElementById("list").innerHTML];
 var footer = document.getElementsByClassName("pagination alternate")[0];
 var liTags = footer.getElementsByTagName("li");
 var numberOfPages = parseInt(liTags[liTags.length - 2].innerText);
+var currentWebsiteURL = window.location.protocol + "//" + window.location.hostname;
+
+/*Functions*/
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -106,11 +109,9 @@ function loadAll() {
     }
 });
         checkFavorites();
-        $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
+        $.getScript(currentWebsiteURL + "/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
     }, (numberOfPages * 0.08) * 1000);
 }
-
-pagesDict = {};
 
 function retrieveAll(page) {
     var xmlhttp = new XMLHttpRequest();
@@ -123,7 +124,7 @@ function retrieveAll(page) {
         }
     };
 
-    url = "https://legacy.hackerexperience.com/list?page=" + page;
+    url = currentWebsiteURL + "/list?page=" + page;
     xmlhttp.open("GET", url, true);
     xmlhttp.withCredentials = true;
     xmlhttp.send(null);
@@ -137,38 +138,18 @@ function retrieveNextPage(page) {
             var xmlResponse = xmlhttp.responseText;
             HTML = HTMLParser(xmlResponse);
             var list = HTML.getElementsByTagName("ul")[3].innerHTML;
-            document.getElementById("list").innerHTML = document.getElementById("list").innerHTML + "\n" + "<hr><br><center><h1>Page " + page + "</h1><small>Brought to you by <a href='https://legacy.hackerexperience.com/profile?id=494249'>MacHacker</a></small></center><br><hr>" + "\n" + list;
+            document.getElementById("list").innerHTML = document.getElementById("list").innerHTML + "\n" + "<hr><br><center><h1>Page " + page + "</h1><small>Brought to you by <a href='" + currentWebsiteURL + "/profile?id=494249'>MacHacker</a></small></center><br><hr>" + "\n" + list;
             checkFavorites();
-            $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
+            $.getScript(currentWebsiteURL + "/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
         }
     };
 
-    url = "https://legacy.hackerexperience.com/list?page=" + page;
+    url = currentWebsiteURL + "/list?page=" + page;
     xmlhttp.open("GET", url, true);
     xmlhttp.withCredentials = true;
     xmlhttp.send(null);
 
 }
-
-numberOfPages = parseInt(liTags[liTags.length - 2].innerText);
-for (var index in liTags) {
-    if (liTags[index].className == "active") {
-        cycledPages = parseInt(liTags[index].innerText);
-        break;
-    }
-}
-
-$(window).scroll(function() {
-    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
-        if (document.getElementsByClassName("link active")[0].innerText == "IP List\n") {
-            if (cycledPages != numberOfPages) {
-                cycledPages += 1;
-                retrieveNextPage(cycledPages);
-
-            }
-        }
-    }
-});
 
 function searchIPdat() {
     var speed = document.getElementById("internetSpeed").value;
@@ -194,7 +175,7 @@ function searchIPdat() {
         }
         document.getElementById("list").innerHTML = group.join("\n");
         checkFavorites();
-        $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
+        $.getScript(currentWebsiteURL + "/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
         return
     } else {
         speed = speed + " Mbit/s";
@@ -218,41 +199,12 @@ function searchIPdat() {
     }
     document.getElementById("list").innerHTML = group.join("\n");
     checkFavorites();
-    $.getScript("https://legacy.hackerexperience.com/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
-}
-
-if (document.getElementsByClassName("link active")[0].innerText == "IP List" || document.getElementsByClassName("link active")[0].innerText == "IP List\n") {
-    injectTab();
-    injectSettingsDiv();
+    $.getScript(currentWebsiteURL + "/js/main.js.pagespeed.jm.oC0Po-3w4s.js", function() {});
 }
 
 function isEven(n) {
     return n % 2 === 0;
 }
-
-times = 0;
-$(document).ready(function() {
-    $("#startAnimation").click(function() {
-        times += 1;
-        setTimeout(function() {
-            if (isEven(times) === false) {
-                $("#animatedElm").animate({
-                    marginTop: '+=50px'
-                }, 500);
-                $("#hidden-div").show(500);
-                document.getElementById("hidden-div").style.display = "block";
-            } else {
-                $("#animatedElm").animate({
-                    marginTop: '-=50px'
-                }, 500);
-                $("#hidden-div").hide(500);
-                document.getElementById("hidden-div").style.display = "none";
-            }
-        }, 500);
-    });
-});
-
-document.getElementById("loadAll").addEventListener("click", loadAll);
 
 var injectStyle = function(css) {
     var head = document.getElementsByTagName('head')[0],
@@ -277,38 +229,92 @@ function toggleFavorite(ip, elem) {
     localStorage.setItem("favorites", JSON.stringify(favorites));
 }
 
-if (window.location.href.indexOf("legacy.hackerexperience.com/list") != -1) {
-    injectStyle('.fa-star {content: "\f005";}');
-    injectStyle('.fa-star-o {content: "\f006";}');
-    injectStyle('i.favorite {color: #DAA520;}');
-    var favText = localStorage.getItem("favorites"),
-        favorites = {};
-    if (!favText) {
-        localStorage.setItem("favorites", "{}");
+function checkFavorites() {
+    $("ul.list.ip li").each(function() {
+        var entry = $(this);
+        var ip = entry.find(".list-ip #ip").text();
+        console.log($("#stared", this).length);
+        if ($("#stared", this).length !== 0) {
+            $("#stared", this).remove();
+        } else {
+            var pass = $(this).find(".list-user span.small").get(1).firstChild.data;
+            var url = $(this).find(".list-ip a").attr("href") + "&action=login&user=root&pass=" + pass;
+            $(this).find(".list-user").prepend('<a href="' + url + '" style="float:left;margin: 2px 5px 0px 5px;"><span class="he16-login icon-tab" title="Login" style="margin:0px;"></span><span class="small">login</span></a>');
+        }
+        favorites = JSON.parse(localStorage.getItem("favorites"));
+        if (favorites[ip]) {
+            entry.find(".list-actions").append('<i class="favorite fa-2x fa fa-inverse fa-star" id="stared"></i>');
+        } else {
+            entry.find(".list-actions").append('<i class="favorite fa-2x fa fa-inverse fa-star-o" id="stared"></i>');
+        }
+        entry.find("i.favorite").click(function() {
+            toggleFavorite(ip, $(this));
+        });
+    });
+}
+
+/*Main controller*/
+
+$(document).ready(function() {
+    times = 0;
+    pagesDict = {};
+
+    numberOfPages = parseInt(liTags[liTags.length - 2].innerText);
+    for (var index in liTags) {
+        if (liTags[index].className == "active") {
+            cycledPages = parseInt(liTags[index].innerText);
+            break;
+        }
     }
 
-    function checkFavorites() {
-        $("ul.list.ip li").each(function() {
-            var entry = $(this);
-            var ip = entry.find(".list-ip #ip").text();
-            console.log($("#stared", this).length);
-            if ($("#stared", this).length !== 0) {
-                $("#stared", this).remove();
-            } else {
-                var pass = $(this).find(".list-user span.small").get(1).firstChild.data;
-                var url = $(this).find(".list-ip a").attr("href") + "&action=login&user=root&pass=" + pass;
-                $(this).find(".list-user").prepend('<a href="' + url + '" style="float:left;margin: 2px 5px 0px 5px;"><span class="he16-login icon-tab" title="Login" style="margin:0px;"></span><span class="small">login</span></a>');
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+            if (document.getElementsByClassName("link active")[0].innerText.match("IP List|Lista de IPs")) {
+                if (cycledPages != numberOfPages) {
+                    cycledPages += 1;
+                    retrieveNextPage(cycledPages);
+
+                }
             }
-            favorites = JSON.parse(localStorage.getItem("favorites"));
-            if (favorites[ip]) {
-                entry.find(".list-actions").append('<i class="favorite fa-2x fa fa-inverse fa-star" id="stared"></i>');
-            } else {
-                entry.find(".list-actions").append('<i class="favorite fa-2x fa fa-inverse fa-star-o" id="stared"></i>');
-            }
-            entry.find("i.favorite").click(function() {
-                toggleFavorite(ip, $(this));
-            });
-        });
+        }
+    })
+
+    if (window.location.href.indexOf(currentWebsiteURL + "/list") != -1) {
+        injectStyle('.fa-star {content: "\f005";}');
+        injectStyle('.fa-star-o {content: "\f006";}');
+        injectStyle('i.favorite {color: #DAA520;}');
+        var favText = localStorage.getItem("favorites"),
+            favorites = {};
+        if (!favText) {
+            localStorage.setItem("favorites", "{}");
+        }
+
+        checkFavorites();
     }
-    checkFavorites();
-}
+
+    if (document.getElementsByClassName("link active")[0].innerText.match("IP List|Lista de IPs") || document.getElementsByClassName("link active")[0].innerText.match("IP List|Lista de IPs")) {
+        injectTab();
+        injectSettingsDiv();
+        document.getElementById("loadAll").addEventListener("click", loadAll);
+        console.log("Injected bitch");
+    }
+
+    $("#startAnimation").click(function() {
+        times += 1;
+        setTimeout(function() {
+            if (isEven(times) === false) {
+                $("#animatedElm").animate({
+                    marginTop: '+=50px'
+                }, 500);
+                $("#hidden-div").show(500);
+                document.getElementById("hidden-div").style.display = "block";
+            } else {
+                $("#animatedElm").animate({
+                    marginTop: '-=50px'
+                }, 500);
+                $("#hidden-div").hide(500);
+                document.getElementById("hidden-div").style.display = "none";
+            }
+        }, 500);
+    });
+});
