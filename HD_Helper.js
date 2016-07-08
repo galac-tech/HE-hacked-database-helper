@@ -23,7 +23,7 @@ function gritterNotify(opts) {
 
 gritterNotify({
                     title: "HexEnhanced",
-                    text: "HexEnhanced fomaly know as the <i>HDB plugin</i> has been <b>discontinued</b> and <b>disabled</b> as we are no longer verified. I will continue to work on the project and it may be released sometime in the future. More info will click <a href='https://forum.hackerexperience.com/viewtopic.php?f=18&t=8614'>here</a> be coming sortly. Stay tuned!",
+                    text: "HexEnhanced fomaly know as the <i>HDB plugin</i> has been <b>discontinued</b> and <b>disabled</b> as we are no longer verified. I will continue to work on the project and it may be released sometime in the future. Click <a href='https://forum.hackerexperience.com/viewtopic.php?f=18&t=8614'>here</a> for more info. More sould be coming sortly. Stay tuned!",
                     image: "",
                     sticky: false
 });
